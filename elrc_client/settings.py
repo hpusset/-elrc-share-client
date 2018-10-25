@@ -1,7 +1,5 @@
 import logging
 
-import urllib3
-
 REPO_URL = 'http://localhost:8000'
 LOGIN_URL = '%s/login/' % REPO_URL
 LOGOUT_URL = '%s/logout/' % REPO_URL
@@ -16,4 +14,3 @@ logging.basicConfig(
     handlers=[
         logging.StreamHandler()
     ])
-
