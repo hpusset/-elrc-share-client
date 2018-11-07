@@ -31,42 +31,45 @@
 # interpreted as representing official policies, either expressed
 # or implied, of ILSP/Athena R.C.
 
-import operator
-from copy import copy
-from deepdiff import DeepDiff
-from functools import reduce
+from setuptools import setup, find_packages
 
 
-def _get_from_dict(data_dict, map_list):
-    return reduce(operator.getitem, map_list, data_dict)
+def readme():
+    with open('README.md') as f:
+        return f.read()
 
 
-def _set_in_dict(data_dict, map_list, value):
-    _get_from_dict(data_dict, map_list[:-1])[map_list[-1]] = value
-
-
-def get_update_with_ids(remote, local):
-    result = copy(local)
-    diff = DeepDiff(local, remote)
-
-    for added_items in diff["dictionary_item_added"]:
-        if "id" not in added_items:
-            continue
-
-        original_parts = added_items.split("[")
-        cleaned_parts = []
-
-        for p in original_parts[1:]:
-            p = p.replace("]", "")
-            p = p.replace("'", "")
-
-            try:
-                p = int(p)
-            except ValueError:
-                pass
-
-            cleaned_parts.append(p)
-        value = _get_from_dict(remote, cleaned_parts)
-        _set_in_dict(result, cleaned_parts, value)
-
-    return result
+setup(name='elrc-share-client',
+      version='0.1',
+      description='Client with CLI for CREATE, READ and UPDATE download operations on ELRC-SHARE repository',
+      long_description=readme(),
+      classifiers=[
+          'License :: OSI Approved :: MIT License',
+          'Programming Language :: Python :: 3.6',
+      ],
+      url='https://github.com/MiltosD/ELRC-Client',
+      author='Miltos Deligiannis',
+      author_email='mdel@ilsp.gr',
+      license='MIT',
+      packages=find_packages(),
+      install_requires=[
+          'attrs==18.2.0',
+          'certifi==2018.8.24',
+          'chardet==3.0.4',
+          'cmd2==0.9.6',
+          'colorama==0.4.0',
+          'deepdiff==3.3.0',
+          'idna==2.7',
+          'jsonpickle==1.',
+          'lxml==4.2.5',
+          'pyperclip==1.7.0',
+          'pyreadline==2.1',
+          'requests==2.19.1',
+          'urllib3==1.23',
+          'wcwidth==0.1.7',
+          'xmltodict==0.11.0'
+      ],
+      entry_points={
+          'console_scripts': ['elrc-shell=elrc_client.bin.elrc_shell:main'],
+      },
+      zip_safe=False)

@@ -1,3 +1,36 @@
+# Copyright 2018 ILSP/Athena R.C. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or
+# without modification, are permitted provided that the following
+# conditions are met:
+#
+#   1. Redistributions of source code must retain the above
+#     copyright notice, this list of conditions and the following
+#     disclaimer.
+#
+#   2. Redistributions in binary form must reproduce the above
+#     copyright notice, this list of conditions and the following
+#     disclaimer in the documentation and/or other materials
+#     provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY ILSP/Athena R.C. ``AS IS'' AND ANY EXPRESS
+# OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL ILSP/Athena R.C. OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+# AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+# The views and conclusions contained in the software and
+# documentation are those of the authors and should not be
+# interpreted as representing official policies, either expressed
+# or implied, of ILSP/Athena R.C.
+
 import atexit
 import json
 import sys
@@ -5,7 +38,7 @@ import zipfile
 
 import os
 import requests
-from elrc_client.settings import LOGIN_URL, API_ENDPOINT, LOGOUT_URL, API_OPERATIONS
+from elrc_client.settings import LOGIN_URL, API_ENDPOINT, LOGOUT_URL, API_OPERATIONS, DOWNLOAD_DIR
 from elrc_client.settings import logging
 from elrc_client.utils.data_merger import get_update_with_ids
 from elrc_client.utils.xml import parser
@@ -24,10 +57,7 @@ class ELRCShareClient:
         self.headers = {
             'Content-Type': 'application/json'
         }
-        if os.name == 'posix':
-            self.download_dir = '/home/{}/ELRC-Downloads'.format(os.getlogin())
-        elif os.name == 'nt':
-            self.download_dir = 'C:/Users/{}/Downloads/ELRC-Downloads'.format(os.getlogin())
+
         atexit.register(self.logout)
 
     def login(self, username, password):
@@ -69,7 +99,7 @@ class ELRCShareClient:
         else:
             pass
 
-    def get_resource(self, rid=None, as_json=False, pretty=False):
+    def get_resource(self, rid=None, as_json=False, as_xml=False, pretty=False):
         """
         Given an ELRC-SHARE Language Resource id, return the resource's metadata
         in a python dictionary.
@@ -78,10 +108,15 @@ class ELRCShareClient:
         :param as_json: Boolean value. If False, the method returns a dictionary, else a json string
         :return: Python dictionary or json containing resource metadata
         """
-        url = "{}{}".format(API_ENDPOINT, rid)
+        if as_xml:
+            url = "{}get_xml/{}/".format(API_OPERATIONS, rid)
+        else:
+            url = "{}{}".format(API_ENDPOINT, rid)
+
         indent = 4 if pretty else None
         try:
             request = self.session.get(url)
+            request.encoding = 'utf-8'
             if request.status_code == 401:
                 return '401 Unauthorized Request'
             elif request.status_code == 400:
@@ -90,12 +125,14 @@ class ELRCShareClient:
                 return 'Resource with rid {} was not found'.format(rid)
             if as_json:
                 return json.dumps(json.loads(request.content), ensure_ascii=False, indent=indent)
+            elif as_xml:
+                return request.text
             else:
                 return json.loads(request.content)
         except requests.exceptions.ConnectionError:
             logging.error('Could not connect to remote host.')
 
-    def get_my_resources(self, as_json=False):
+    def get_my_resources(self, as_json=True, as_xml=False, pretty=False):
         """
         Given an ELRC-SHARE Language Resource id, return the resource's metadata
         in a python dictionary.
@@ -104,6 +141,7 @@ class ELRCShareClient:
         :param as_json: Boolean value. If False, the method returns a dictionary, else a json string
         :return: Python dictionary or json containing resource metadata
         """
+        indent = 4 if pretty else None
         try:
             request = self.session.get(API_ENDPOINT + '?limit=0')
             if request.status_code == 401:
@@ -113,7 +151,7 @@ class ELRCShareClient:
             elif request.status_code == 404:
                 return 'Resource with id {} was not found'.format(id)
             if as_json:
-                return json.dumps(json.loads(request.content), ensure_ascii=False)
+                return json.dumps(json.loads(request.content), ensure_ascii=False, indent=indent)
             else:
                 return json.loads(request.content)
         except requests.exceptions.ConnectionError:
@@ -130,29 +168,37 @@ class ELRCShareClient:
         url = "{}{}".format(API_ENDPOINT, id)
         # populate
         data = parser.parse(open(os.path.join(os.path.dirname(__file__), xml_file), encoding='utf-8').read())
-        final = get_update_with_ids(self.get_resource(id), to_dict(data))
-        # final = to_dict(data)
-        final['resourceInfo']['id'] = id
-        try:
-            request = self.session.patch(url, headers=self.headers,
-                                         data=json.dumps(final, ensure_ascii=False).encode('utf-8'))
-            print(request.status_code, request.content)
-            return request.status_code, request.content
-        except requests.exceptions.ConnectionError:
-            logging.error('Could not connect to remote host.')
+        remote_resource = self.get_resource(id)
+        if type(remote_resource) is not dict:
+            logging.error(remote_resource)
+        else:
+            final = get_update_with_ids(self.get_resource(id), to_dict(data))
+            print(final)
+            # final = to_dict(data)
+            final['resourceInfo']['id'] = id
+
+            try:
+                request = self.session.patch(url, headers=self.headers,
+                                             data=json.dumps(final, ensure_ascii=False).encode('utf-8'))
+                print(request.status_code, request.content)
+                return request.status_code, request.content
+            except requests.exceptions.ConnectionError:
+                logging.error('Could not connect to remote host.')
 
     def create_resource(self, description, dataset=None):
         resource_name = description.get('resourceInfo').get('identificationInfo').get('resourceName').get('en')
+        # print(json.dumps(description, ensure_ascii=False))
         try:
             request = self.session.post(API_ENDPOINT, headers=self.headers,
                                         data=json.dumps(description, ensure_ascii=False).encode('utf-8'))
+
             if request.status_code == 201:
                 print("Metadata created".format(resource_name))
                 new_id = json.loads(request.content).get('ID')
                 try:
                     self.upload_data(new_id, dataset)
                 except Exception as e:
-                    logging.error(e)
+                    pass
                 print("Resource '{}' has been created\n".format(resource_name))
                 return
             elif request.status_code == 401:
@@ -199,21 +245,21 @@ class ELRCShareClient:
         else:
             logging.info('Processing file: {}'.format(file))
             data = parser.parse(open(os.path.join(os.path.dirname(__file__), file), encoding='utf-8').read())
+
             self.create_resource(data, dataset=dataset)
 
     def download_data(self, resource_id, destination='', progress=True):
         if self.logged_in:
             if not destination:
-                destination = self.download_dir
+                destination = DOWNLOAD_DIR
             try:
                 url = "{}get_data/{}/".format(API_OPERATIONS, resource_id)
                 head = self.session.head(url)
                 try:
-                    print(head.headers.get('Content-Type'), head.status_code)
                     if head.headers.get('Content-Type') != 'application/zip':
                         if head.status_code == 200:
                             # returns a page with the message "No Download Available"
-                            logging.error('Dataset for resource {} was not found'.format(resource_id))
+                            logging.error('Dataset for resource {} was not found\n'.format(resource_id))
                             return None
                         if head.status_code == 401:
                             logging.error('401 Unauthorized Request')
@@ -235,11 +281,14 @@ class ELRCShareClient:
                             return None
                     else:
                         logging.info('Downloading resource with id {}'.format(resource_id))
-                        self._provide_download(url, resource_id, destination, progress=progress)
+                        try:
+                            destination_file = self._provide_download(url, resource_id, destination, progress=progress)
+                            logging.info("Download complete at {}\n".format(destination_file))
+                        except RuntimeError:
+                            logging.error("Could not write file. Unknown runtime error occurred.")
                 except RuntimeError:
                     pass
-                logging.info("Download complete.".format(resource_id))
-                return "OK"
+                return True
             except requests.exceptions.ConnectionError:
                 logging.error('Could not connect to remote host.')
         else:
@@ -249,7 +298,8 @@ class ELRCShareClient:
         # Check if destination directory is provided an whether it exists. If not create it
         if destination:
             os.makedirs(destination, exist_ok=True)
-        with open(os.path.join(destination, "archive-{}.zip".format(resource_id)), 'wb') as f:
+        destination_file = os.path.join(destination, "archive-{}.zip".format(resource_id))
+        with open(destination_file, 'wb') as f:
             response = self.session.get(url, stream=True)
             total = response.headers.get('content-length')
 
@@ -267,4 +317,4 @@ class ELRCShareClient:
                         sys.stdout.flush()
         if progress:
             sys.stdout.write('\n')
-        return response
+        return destination_file
