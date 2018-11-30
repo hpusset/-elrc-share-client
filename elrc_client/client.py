@@ -224,6 +224,7 @@ class ELRCShareClient:
         # Tool/Service not supported
         if description.get('resourceInfo').get('resourceComponentType').get('toolServiceInfo'):
             logging.error("Tool/Services are not yet supported")
+            return
         try:
             request = self.session.post(API_ENDPOINT, headers=self.headers,
                                         data=json.dumps(description, ensure_ascii=False).encode('utf-8'))
