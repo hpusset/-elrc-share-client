@@ -48,7 +48,7 @@ from elrc_client.settings import DOWNLOAD_DIR
 
 
 class ELRCShell(Cmd):
-    prompt = '(ELRC Shell) # '
+    prompt = '(ELRC-Share Shell) # '
     client = ELRCShareClient()
     parser = optparse.OptionParser()
     # alias_list = [
@@ -60,6 +60,7 @@ class ELRCShell(Cmd):
     parser.add_option('-f', '--file', dest='xml_file')
     parser.add_option('-z', '--zip', dest='data_file', default=None)
     parser.add_option('-p', '--pretty', dest='pretty', default=False, action='store_true')
+    parser.add_option('-m', '--my', dest='my', default=False, action='store_true')
 
     def _redirect_output(self, statement: Statement) -> None:
         """Handles output redirection for >, >>, and |.
@@ -133,6 +134,11 @@ class ELRCShell(Cmd):
         pass
 
     def do_login(self, args):
+        """
+        Login to ELRC-SHARE repository with your credentials
+        :param args:
+        :return:
+        """
         if not args:
             logging.error("No credentials provided!")
             return
@@ -145,12 +151,35 @@ class ELRCShell(Cmd):
         self.client.login(username, password)
 
     def do_logout(self, args):
+        """
+        Logout from ELRC-SHARE repository
+        :param args:
+        :return:
+        """
         self.client.logout()
 
     def do_getj(self, args):
         """
+        Get a json representation of a resource or a list of resources (as seperate json strings). If no resources are
+        specified, the command will return all the resources that a certain user has access to, based on their
+        permissions, in a single json object. In addition to the metadata, the result also contains information about
+        the publication status of the resource and it's download location (if no dataset has been uploaded this location
+        will be an empty directory).
 
-        :param args:
+        The result of the command can be saved to a file:
+        "getj <id> > filename.json".
+
+        User group permissions:
+        -----------------------
+        Administrators: all resources
+        ELRC Reviewers: all resources
+        EC members: all published, ingested and owned resources
+        Simple editors: owned resources
+        Contributors: no resources
+
+        :param args: A list of space seperated resource ids
+        -options: --pretty/-p: formats json string with indentation, -my/--my: get only owned resources (useful for
+                admins. elrc reviewers and EC members
         :return: A json represenatation of a resource's metadata record
         """
         try:
@@ -162,14 +191,26 @@ class ELRCShell(Cmd):
                 print(self.client.get_resource(r, as_json=True, pretty=options.pretty))
                 print('')
         else:
-            print(self.client.get_my_resources(as_json=True, pretty=options.pretty))
+            print(self.client.get_resources(as_json=True, pretty=options.pretty, my=options.my))
             print('')
 
     def do_getx(self, args):
         """
+        Get an XML representation of a resource or a list of resources (as seperate xml strings).
 
-        :param args:
-        :return: An XML represenatation of a resource's metadata record
+        The result of the command can be saved to a file:
+        "getx <id> > filename.xml".
+
+        User group permissions:
+        -----------------------
+        Administrators: all resources
+        ELRC Reviewers: all resources
+        EC members: all published, ingested and owned resources
+        Simple editors: owned resources
+        Contributors: no resources
+
+        :param args: A list of space seperated resource ids
+        :return: An XML representation of a resource's (or list of resources) metadata record
         """
         try:
             (options, arg_list) = self.parser.parse_args(args.split())
@@ -180,14 +221,14 @@ class ELRCShell(Cmd):
             print(self.client.get_resource(r, as_xml=True, pretty=options.pretty))
             print('')
 
-    def do_my_resources(self, args):
-        print(self.client.get_my_resources(as_json=False))
-
     def do_create(self, args):
         """
-
+        Create a new resource from an xml file, with optional dataset (.zip archive) to upload. If no dataset is
+        provided, the command will try to upload any .zip archive that has the same name with the xml file (e.g.
+        resource1.xml, resource1.zip. You can also pass a .zip archive containing a collection of xml files.
         :param args: An ELRC-SHARE resource id or a space seperated list of resource ids
-        :return:
+        options: --zip/-z: A .zip archive to upload
+        :return: Name of new resource
         """
         try:
             (options, arg_list) = self.parser.parse_args(args.split())
@@ -218,7 +259,7 @@ class ELRCShell(Cmd):
             for arg in arg_list:
                 self.client.download_data(arg, destination=options.destination or '')
         else:
-            self.client.get_my_resources()
+            self.client.get_resources()
         return
 
     def do_upload(self, args):

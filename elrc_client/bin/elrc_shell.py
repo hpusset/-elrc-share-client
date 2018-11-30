@@ -30,11 +30,13 @@
 # documentation are those of the authors and should not be
 # interpreted as representing official policies, either expressed
 # or implied, of ILSP/Athena R.C.
-
+import os
 from elrc_client.cli.cli import ELRCShell
 
 
 def main():
-    shell = ELRCShell()
+    shell = ELRCShell(persistent_history_file=os.path.join(os.path.dirname(os.path.realpath(__file__)), "history.txt"))
     shell.cmdloop()
 
+if __name__ == "__main__":
+    main()

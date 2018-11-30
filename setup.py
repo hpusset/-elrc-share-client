@@ -40,7 +40,7 @@ def readme():
 
 
 setup(name='elrc-share-client',
-      version='0.1',
+      version='1.0.0',
       description='Client with CLI for CREATE, READ and UPDATE download operations on ELRC-SHARE repository',
       long_description=readme(),
       classifiers=[

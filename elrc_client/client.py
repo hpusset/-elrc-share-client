@@ -41,6 +41,7 @@ import requests
 from elrc_client.settings import LOGIN_URL, API_ENDPOINT, LOGOUT_URL, API_OPERATIONS, DOWNLOAD_DIR
 from elrc_client.settings import logging
 from elrc_client.utils.data_merger import get_update_with_ids
+from elrc_client.utils.util import is_xml, ChunkUploader
 from elrc_client.utils.xml import parser
 
 
@@ -74,7 +75,8 @@ class ELRCShareClient:
                 # Login to site
                 try:
                     login = self.session.post(LOGIN_URL, data=login_data)
-                    if 'Your username and password didn\'t match' in login.text:
+                    print(LOGIN_URL)
+                    if 'Your username and password didn\'t match' in login.text or login.status_code != 200:
                         logging.error('Unsuccessful Login...')
                     else:
                         self.logged_in = True
@@ -108,6 +110,10 @@ class ELRCShareClient:
         :param as_json: Boolean value. If False, the method returns a dictionary, else a json string
         :return: Python dictionary or json containing resource metadata
         """
+        if not self.logged_in:
+            logging.error("Please login to ELRC-SHARE using your credentials")
+            return
+
         if as_xml:
             url = "{}get_xml/{}/".format(API_OPERATIONS, rid)
         else:
@@ -122,7 +128,7 @@ class ELRCShareClient:
             elif request.status_code == 400:
                 return '400 Bad Request'
             elif request.status_code == 404:
-                return 'Resource with rid {} was not found'.format(rid)
+                return 'Resource with id {} was not found'.format(rid)
             if as_json:
                 return json.dumps(json.loads(request.content), ensure_ascii=False, indent=indent)
             elif as_xml:
@@ -132,24 +138,32 @@ class ELRCShareClient:
         except requests.exceptions.ConnectionError:
             logging.error('Could not connect to remote host.')
 
-    def get_my_resources(self, as_json=True, as_xml=False, pretty=False):
+    def get_resources(self, as_json=True, as_xml=False, pretty=False, my=False):
         """
-        Given an ELRC-SHARE Language Resource id, return the resource's metadata
-        in a python dictionary.
+        Return the metadata of all resources that the current user owns
+        in a python dictionary, xml, or json. If the user is admin or belongs to another privileged group, the method
+        return all resources in the repository.
 
-        :param id: ELRC Resource ID
-        :param as_json: Boolean value. If False, the method returns a dictionary, else a json string
+        :param as_json: Boolean value. If True, the method returns a json representation of the resource metadata
+        :param as_xml: Boolean value. If True, the method returns an xml representation of the resource metadata
+        :param pretty: Boolean value. If True, the method returns the prettified json representation
         :return: Python dictionary or json containing resource metadata
         """
+        if not self.logged_in:
+            logging.error("Please login to ELRC-SHARE using your credentials")
+            return
+
         indent = 4 if pretty else None
+        if my:
+            url = API_ENDPOINT + '/my?limit=0'
+        else:
+            url = API_ENDPOINT + '?limit=0'
         try:
-            request = self.session.get(API_ENDPOINT + '?limit=0')
+            request = self.session.get(url)
             if request.status_code == 401:
                 return '401 Unauthorized Request'
             elif request.status_code == 400:
                 return '400 Bad Request'
-            elif request.status_code == 404:
-                return 'Resource with id {} was not found'.format(id)
             if as_json:
                 return json.dumps(json.loads(request.content), ensure_ascii=False, indent=indent)
             else:
@@ -165,6 +179,16 @@ class ELRCShareClient:
         :param data: A python dictionary containing the data to be passed for updating the resource
         :return: status code (expected 202)
         """
+
+        # reset headers
+        self.headers = {
+            'Content-Type': 'application/json'
+        }
+
+        if not self.logged_in:
+            logging.error("Please login to ELRC-SHARE using your credentials")
+            return
+
         url = "{}{}".format(API_ENDPOINT, id)
         # populate
         data = parser.parse(open(os.path.join(os.path.dirname(__file__), xml_file), encoding='utf-8').read())
@@ -173,7 +197,6 @@ class ELRCShareClient:
             logging.error(remote_resource)
         else:
             final = get_update_with_ids(self.get_resource(id), to_dict(data))
-            print(final)
             # final = to_dict(data)
             final['resourceInfo']['id'] = id
 
@@ -186,6 +209,16 @@ class ELRCShareClient:
                 logging.error('Could not connect to remote host.')
 
     def create_resource(self, description, dataset=None):
+
+        # reset headers
+        self.headers = {
+            'Content-Type': 'application/json'
+        }
+
+        if not self.logged_in:
+            logging.error("Please login to ELRC-SHARE using your credentials")
+            return
+
         resource_name = description.get('resourceInfo').get('identificationInfo').get('resourceName').get('en')
         # print(json.dumps(description, ensure_ascii=False))
         try:
@@ -193,22 +226,61 @@ class ELRCShareClient:
                                         data=json.dumps(description, ensure_ascii=False).encode('utf-8'))
 
             if request.status_code == 201:
-                print("Metadata created".format(resource_name))
+                print("Metadata created")
                 new_id = json.loads(request.content).get('ID')
                 try:
-                    self.upload_data(new_id, dataset)
+                    self.upload_data(new_id, data_file=dataset)
                 except Exception as e:
                     pass
                 print("Resource '{}' has been created\n".format(resource_name))
-                return
+                return request.status_code
             elif request.status_code == 401:
                 logging.error('401 Unauthorized Request')
-                return
+                return request.status_code
+            else:
+                logging.error('{} Could not create resource'.format(request.status_code))
+                for k, v in json.loads(request.text).items():
+                    print("\n".join(v))
+                return request.status_code, request.content
         except requests.exceptions.ConnectionError:
             logging.error('Could not connect to remote host.')
+            return 'Connection Error'
+
+    def create_resources(self, file, dataset=None, input=None):
+
+        if not self.logged_in:
+            logging.error("Please login to ELRC-SHARE using your credentials")
+            return
+
+        if os.path.isdir(file):
+            for f in os.listdir(file):
+                data = None
+                if is_xml(f):
+                    logging.info('Processing file: {}'.format(f))
+                    with open(os.path.join(file, f), encoding='utf-8') as inp:
+                        data = parser.parse(inp.read())
+                    attached_dataset = os.path.join(file, f.replace('.xml', '.zip'))
+                    if zipfile.is_zipfile(attached_dataset):
+                        logging.info('Dataset {} found'.format(attached_dataset))
+                        self.create_resource(data, dataset=attached_dataset)
+                    else:
+                        self.create_resource(data)
+
+        elif zipfile.is_zipfile(file):
+            zip_file = zipfile.ZipFile(file)
+            for f in zip_file.namelist():
+                logging.info('Processing file: {}'.format(f))
+                data = parser.parse(zip_file.open(f).read())
+                self.create_resource(data)
+        else:
+            logging.info('Processing file: {}'.format(file))
+            with open(os.path.join(os.path.dirname(__file__), file), encoding='utf-8') as f:
+                data = parser.parse(f.read())
+            return self.create_resource(data, dataset=dataset)
 
     def upload_data(self, resource_id, data_file):
 
+        # determine dataset by resource filename
         if not zipfile.is_zipfile(data_file):
             logging.error('Not a valid zip archive')
             return
@@ -219,34 +291,23 @@ class ELRCShareClient:
                 pass
             self.headers.update({'X-CSRFToken': self.session.cookies['csrftoken']})
             url = "{}upload_data/{}/".format(API_OPERATIONS, resource_id)
-
-            files = {'resource': open(data_file, 'rb')}
             data = {
                 'csrfmiddlewaretoken': self.session.cookies['csrftoken'],
                 'uploadTerms': 'on',
                 'api': True}
 
-            print('Attempting dataset upload...')
-            response = self.session.post(
-                url,
-                headers=self.headers,
-                files=files,
-                data=data
-            )
-            print(response.text)
+            print('Uploading dataset {} ({:,.2f}Mb)'.format(data_file, os.path.getsize(data_file)/(1024*1024.0)))
+            # response = self.session.post(
+            #     url,
+            #     headers=self.headers,
+            #     files=files,
+            #     data=data
+            # )
 
-    def create_resources(self, file, dataset=None):
-        if zipfile.is_zipfile(file):
-            zip_file = zipfile.ZipFile(file)
-            for f in zip_file.namelist():
-                logging.info('Processing file: {}'.format(f))
-                data = parser.parse(zip_file.open(f).read())
-                self.create_resource(data)
-        else:
-            logging.info('Processing file: {}'.format(file))
-            data = parser.parse(open(os.path.join(os.path.dirname(__file__), file), encoding='utf-8').read())
-
-            self.create_resource(data, dataset=dataset)
+            with open(data_file, 'rb') as f:
+                response = self.session.post(url, files={'resource': f}, data=data)
+                # self.session.post(url, dat)
+                print(response.text)
 
     def download_data(self, resource_id, destination='', progress=True):
         if self.logged_in:
