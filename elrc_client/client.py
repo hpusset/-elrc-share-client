@@ -41,7 +41,7 @@ import requests
 from elrc_client.settings import LOGIN_URL, API_ENDPOINT, LOGOUT_URL, API_OPERATIONS, DOWNLOAD_DIR
 from elrc_client.settings import logging
 from elrc_client.utils.data_merger import get_update_with_ids
-from elrc_client.utils.util import is_xml, ChunkUploader
+from elrc_client.utils.util import is_xml
 from elrc_client.utils.xml import parser
 
 
@@ -221,6 +221,9 @@ class ELRCShareClient:
 
         resource_name = description.get('resourceInfo').get('identificationInfo').get('resourceName').get('en')
         # print(json.dumps(description, ensure_ascii=False))
+        # Tool/Service not supported
+        if description.get('resourceInfo').get('resourceComponentType').get('toolServiceInfo'):
+            logging.error("Tool/Services are not yet supported")
         try:
             request = self.session.post(API_ENDPOINT, headers=self.headers,
                                         data=json.dumps(description, ensure_ascii=False).encode('utf-8'))
@@ -298,7 +301,7 @@ class ELRCShareClient:
                 'uploadTerms': 'on',
                 'api': True}
 
-            print('Uploading dataset {} ({:,.2f}Mb)'.format(data_file, os.path.getsize(data_file)/(1024*1024.0)))
+            print('Uploading dataset {} ({:,.2f}Mb)'.format(data_file, os.path.getsize(data_file) / (1024 * 1024.0)))
             # response = self.session.post(
             #     url,
             #     headers=self.headers,
