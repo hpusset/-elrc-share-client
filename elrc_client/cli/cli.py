@@ -58,7 +58,7 @@ class ELRCShell(Cmd):
     # ]
     parser.add_option('-d', '--dest', dest='destination')
     parser.add_option('-f', '--file', dest='xml_file')
-    parser.add_option('-z', '--zip', dest='data_file', default=None)
+    parser.add_option('-z', '--data', dest='data_file', default=None)
     parser.add_option('-p', '--pretty', dest='pretty', default=False, action='store_true')
     parser.add_option('-m', '--my', dest='my', default=False, action='store_true')
 
@@ -270,6 +270,12 @@ class ELRCShell(Cmd):
         return
 
     def do_upload(self, args):
+        """
+        Upload a single dataset zip archive for a given resource id
+        :param args: resource id
+        options:
+        :return:
+        """
         try:
             (options, arg_list) = self.parser.parse_args(args.split())
         except (optparse.BadOptionError, optparse.OptionValueError):
