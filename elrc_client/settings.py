@@ -52,6 +52,8 @@ XML_SCHEMA = 'https://elrc-share.eu/ELRC-SHARE_SCHEMA/v2.0/ELRC-SHARE-Resource.x
 # Set default directory for downloads
 if os.name == 'posix':
     DOWNLOAD_DIR = '/home/{}/ELRC-Downloads'.format(os.getlogin())
+    if not os.path.exists(DOWNLOAD_DIR):
+        os.mkdir(DOWNLOAD_DIR)
 elif os.name == 'nt':
     DOWNLOAD_DIR = 'C:\\Users\\{}\\Downloads\\ELRC-Downloads'.format(os.getlogin())
 
