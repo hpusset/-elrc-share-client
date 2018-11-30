@@ -250,6 +250,13 @@ class ELRCShell(Cmd):
             self.client.update_resource(r, options.xml_file)
 
     def do_download(self, args):
+        """
+        Downloads datasets specified by the resource ids
+        :param args: A list of space seperated resource ids
+        options: -d/--dest: The location where the zip archive is to be saved.
+                If no destination is specified, the archive will be saved in the default directory.
+        :return: zipped archive of the dataset
+        """
         try:
             (options, arg_list) = self.parser.parse_args(args.split())
         except (optparse.BadOptionError, optparse.OptionValueError):
