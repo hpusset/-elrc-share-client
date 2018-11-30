@@ -265,13 +265,6 @@ class ELRCShareClient:
                         self.create_resource(data, dataset=attached_dataset)
                     else:
                         self.create_resource(data)
-
-        elif zipfile.is_zipfile(file):
-            zip_file = zipfile.ZipFile(file)
-            for f in zip_file.namelist():
-                logging.info('Processing file: {}'.format(f))
-                data = parser.parse(zip_file.open(f).read())
-                self.create_resource(data)
         else:
             logging.info('Processing file: {}'.format(file))
             with open(os.path.join(os.path.dirname(__file__), file), encoding='utf-8') as f:
