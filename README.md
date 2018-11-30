@@ -8,7 +8,7 @@ Users that intend to use the elrc-share-client must have an active account on EL
 #### Available Commands
 - `login <username> <password>`
 - `logout`
-## Metadata and Data Retrieval
+## Resource Retrieval
 #### Available Commands
 - `getj`
 - `gex`
@@ -84,5 +84,11 @@ directory.
 e.g `download 100 110` # download the datasets of the resources with ids
 100 and 110.
 
-e.g `download 100 110 --dest \home\my_dir` # download the datasets of the resources with ids
+e.g `download 100 110 --dest /home/my_dir` # download the datasets of the resources with ids
 100 and 110 into the specified destination.
+
+## Resource Creation/Update
+#### Available Commands
+- `create`
+- `update`
+- `upload`

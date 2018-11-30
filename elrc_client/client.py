@@ -273,6 +273,15 @@ class ELRCShareClient:
 
     def upload_data(self, resource_id, data_file):
 
+        # reset headers
+        self.headers = {
+            'Content-Type': 'application/json'
+        }
+
+        if not self.logged_in:
+            logging.error("Please login to ELRC-SHARE using your credentials")
+            return
+
         # determine dataset by resource filename
         if not zipfile.is_zipfile(data_file):
             logging.error('Not a valid zip archive')
