@@ -92,3 +92,24 @@ e.g `download 100 110 --dest /home/my_dir` # download the datasets of the resour
 - `create`
 - `update`
 - `upload`
+
+### `create`
+Creates a new resource from an xml file, with optional dataset
+(.zip archive) to upload. If no dataset is provided, the command will
+try to upload any .zip archive that has the same name with the xml file,
+within the same directory (e.g. resource1.xml, resource1.zip). For batch
+creation, pass the full path to the directory containing the metadata xml files, along with any dataset.
+
+**Arguments**
+
+The full path to the metadata xml file or the containing directory (for
+batch creation)
+
+**Options**
+
+`-z` or `--data`: The full path to the .zip archive to be uploaded along
+with the new resource (not used for batch creation).
+
+### `update`
+
+### `upload`

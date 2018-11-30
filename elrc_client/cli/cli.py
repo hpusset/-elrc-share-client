@@ -225,7 +225,7 @@ class ELRCShell(Cmd):
         """
         Create a new resource from an xml file, with optional dataset (.zip archive) to upload. If no dataset is
         provided, the command will try to upload any .zip archive that has the same name with the xml file (e.g.
-        resource1.xml, resource1.zip. You can also pass a .zip archive containing a collection of xml files.
+        resource1.xml, resource1.zip).
         :param args: An ELRC-SHARE resource id or a space seperated list of resource ids
         options: --zip/-z: A .zip archive to upload
         :return: Name of new resource
@@ -273,7 +273,7 @@ class ELRCShell(Cmd):
         """
         Upload a single dataset zip archive for a given resource id
         :param args: resource id
-        options:
+        options: -z/--data: The full path to the zip archive to be uploaded
         :return:
         """
         try:
