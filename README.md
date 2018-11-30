@@ -1,46 +1,35 @@
-========
-
 Overview
 --------
 
-./elrc-client is an interactive command-line tool, and also a
-client development library for managing ELRC-SHARE resources.
+**elrc-share-client** is an interactive command-line tool for retrieving and updating ELRC-SHARE resources.
 
-/elrc-client is open source and released under a 2-clause BSD License.
+## User Authentication
+Users that intend to use the elrc-share-client must have an active account on ELRC-SHARE repository.
+#### Available Commands
+- `login <username> <password>`
+- `logout`
+## Metadata and Data Retrieval
+#### Available Commands
+- `getj`
+- `gex`
 
+### `getj`
+Returns a json representation of a resource or a list of resources (as seperate json strings). If no resources are
+specified, the command will return all the resources that a certain user has access to, based on their
+permissions, in a single json object. In addition to the metadata, the result also contains information about
+the publication status of the resource and it's download location (if no dataset has been uploaded this location
+will be an empty directory).
 
-Copyright and license
-=====================
+**User group permissions**
 
-Copyright (C) 2018 ILSP/Athena R.C. All rights reserved.
+- *Administrators*: all resources
+- *ELRC Reviewers*: all resources
+- *EC members*: all published, ingested and own resources
+- *Simple editors*: own resources
+- *Contributors*: no resources
 
-Redistribution and use in source and binary forms, with or
-without modification, are permitted provided that the following
-conditions are met:
+e.g `getj 100` # Get a json representation of the resource with id 100.
 
-  1. Redistributions of source code must retain the above
-     copyright notice, this list of conditions and the following
-     disclaimer.
+e.g `getj 10 11 23` # Get json representations of the resources with id 10, 11, and 23.
 
-  2. Redistributions in binary form must reproduce the above
-     copyright notice, this list of conditions and the following
-     disclaimer in the documentation and/or other materials
-     provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY ILSP/Athena R.C. ``AS IS'' AND ANY EXPRESS
-OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL ILSP/Athena R.C. OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
-AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-
-The views and conclusions contained in the software and
-documentation are those of the authors and should not be
-interpreted as representing official policies, either expressed
-or implied, of ILSP/Athena R.C.
+e.g `getj` # Get a json representation of all the resources that the currently logged in user has access to.

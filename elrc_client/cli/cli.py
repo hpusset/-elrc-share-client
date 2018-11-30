@@ -173,8 +173,8 @@ class ELRCShell(Cmd):
         -----------------------
         Administrators: all resources
         ELRC Reviewers: all resources
-        EC members: all published, ingested and owned resources
-        Simple editors: owned resources
+        EC members: all published, ingested and own resources
+        Simple editors: own resources
         Contributors: no resources
 
         :param args: A list of space seperated resource ids
