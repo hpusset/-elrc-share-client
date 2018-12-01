@@ -75,7 +75,6 @@ class ELRCShareClient:
                 # Login to site
                 try:
                     login = self.session.post(LOGIN_URL, data=login_data)
-                    print(LOGIN_URL)
                     if 'Your username and password didn\'t match' in login.text or login.status_code != 200:
                         logging.error('Unsuccessful Login...')
                     else:
