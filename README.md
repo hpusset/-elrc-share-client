@@ -32,7 +32,7 @@ Users that intend to use the elrc-share-client must have an active account on EL
 ## Resource Retrieval
 #### Available Commands
 - `getj`
-- `gex`
+- `getx`
 - `download`
 
 ### `getj`
@@ -97,7 +97,7 @@ A list of space seperated resource ids
 
 Results returned by the `getj` and `getx` commands can be saved to a file using output redirection `>`. 
 If no path is specified, the result will be saved in the default directory (`/home/<user>/ELRC-Downloads` 
-for Linux and `C:\Users\Unicorn\Downloads\ELRC-Downloads` for Windows).
+for Linux and `C:\Users\<UserName>\Downloads\ELRC-Downloads` for Windows).
 
     getj 100 --pretty > resource-100.json
     getj 100 --pretty > /path/to/my/directory/resource-100.json
