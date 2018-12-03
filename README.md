@@ -3,6 +3,7 @@ Overview
 
 **elrc-share-client** is an interactive command-line tool for retrieving, creating and updating ELRC-SHARE resources.
 
+
 ## Installation
 1. Install Python 3.6
 2. `cd` to a preferred directory and create a virtual environment based on Python 3.6
@@ -178,9 +179,9 @@ An ELRC-SHARE resource id.
 
 **Options**
 
-`-f` or `--file`: The full path to the metadata xml file.
+`-d` or `--data`: The full path to the .zip archive to be uploaded.
 
 **Examples**
     
     # Update the resource with id 100 with the specified xml file
-    update 100 --file /path/to/updated/xml_file.xml
+    upload 100 --data /path/to/zipped/archive.zip
