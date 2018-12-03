@@ -14,9 +14,9 @@ Overview
     
 3. Activate the new virtual environment
     
-    `source elrc_env/Scripts/activate` for Linux
+    `source elrc_env/bin/activate` for Linux
     
-    `elrc_env/bin/activate` for Windows
+    `elrc_env/Scripts/activate` for Windows
     
 4. install the *elrc-share-client* package with pip
 
