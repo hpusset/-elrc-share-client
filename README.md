@@ -104,7 +104,7 @@ for Linux and `C:\Users\<UserName>\Downloads\ELRC-Downloads` for Windows).
     getj 100 --pretty > /path/to/my/directory/resource-100.json
     
 ### `download`
-Returns the zipped dataset of a resource or a list of resources that a logged in user has access to.
+Retrives the zipped dataset of a resource or a list of resources that a logged in user has access to. The .zip archive is saved as *archive-<resource-id>.zip*
 
 **Options**
 
