@@ -183,5 +183,5 @@ An ELRC-SHARE resource id.
 
 **Examples**
     
-    # Update the resource with id 100 with the specified xml file
+    # Upload a .zip archive to a resource with a given id (replaces existing dataset)
     upload 100 --data /path/to/zipped/archive.zip
