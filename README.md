@@ -103,7 +103,7 @@ for Linux and `C:\Users\<UserName>\Downloads\ELRC-Downloads` for Windows).
     getj 100 --pretty > /path/to/my/directory/resource-100.json
     
 ### `download`
-Returns an XML representation of a resource or a list of resources
+Returns the zipped dataset of a resource or a list of resources
 (as seperate xml strings) that a logged in user has access to.
 
 **Options**
