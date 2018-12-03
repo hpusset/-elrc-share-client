@@ -1,7 +1,7 @@
 Overview
 --------
 
-**elrc-share-client** is an interactive command-line tool for retrieving and updating ELRC-SHARE resources.
+**elrc-share-client** is an interactive command-line tool for retrieving, creating and updating ELRC-SHARE resources.
 
 ## Installation
 1. Install Python 3.6
