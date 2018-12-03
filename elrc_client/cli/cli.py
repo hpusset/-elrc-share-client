@@ -239,8 +239,11 @@ class ELRCShell(Cmd):
 
     def do_update(self, args):
         """
-            Update a resource description from an xml file, or multiple description from a zip archive
-            containing valid ELRC-SHARE xml files.
+        Updates a resource description from an xml file.
+
+        :param args: An ELRC-SHARE resource id
+        options: -f/--file: The full path to the metadata xml file
+        :return: A json representation of the updated resource's metadata record
         """
         try:
             (options, arg_list) = self.parser.parse_args(args.split())

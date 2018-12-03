@@ -3,6 +3,27 @@ Overview
 
 **elrc-share-client** is an interactive command-line tool for retrieving and updating ELRC-SHARE resources.
 
+## Installation
+1. Install Python 3.6
+2. `cd` to a preferred directory and create a virtual environment based on Python 3.6
+
+    `cd /path/to/my/directory`
+    
+    `virtualenv --python=/path/to/python3.6/python3 elrc_env`
+    
+3. Activate the new virtual environment
+    
+    `source elrc_env/Scripts/activate` for Linux
+    
+    `elrc_env/bin/activate` for Windows
+    
+4. install the *elrc-share-client* package with pip
+
+    `pip install git+https://github.com/MiltosD/ELRC-Client.git@dev`
+    
+5. Start the ELRC-SHARE shell
+
+    `elrc-shell`
 ## User Authentication
 Users that intend to use the elrc-share-client must have an active account on ELRC-SHARE repository.
 #### Available Commands
@@ -44,16 +65,19 @@ A list of space seperated resource ids
 - *Simple editors*: own resources
 - *Contributors*: no resources
 
-e.g `getj 100` # Get a json representation of the resource with id 100.
+**Examples**
 
-e.g `getj 100 --pretty` # Get a formatted json representation of the
-resource with id 100.
-
-e.g `getj 10 11 23` # Get json representations of the resources with ids
-10, 11, and 23.
-
-e.g `getj` # Get a json representation of all the resources that the
-currently logged in user has access to.
+    # Get a json representation of the resource with id 100
+    getj 100
+    
+    # Get a formatted json representation of the resource with id 100
+    getj 100 --pretty
+    
+    # Get json representations of the resources with ids 10, 11, and 23
+    getj 10 11 23
+    
+    Get a json representation of all the resources that the currently logged in user has access to
+    getj
 
 ### `getx`
 Returns an XML representation of a resource or a list of resources
@@ -71,6 +95,13 @@ A list of space seperated resource ids
 - *Simple editors*: own resources
 - *Contributors*: no resources
 
+Results returned by the `getj` and `getx` commands can be saved to a file using output redirection `>`. 
+If no path is specified, the result will be saved in the default directory (`/home/<user>/ELRC-Downloads` 
+for Linux and `C:\Users\Unicorn\Downloads\ELRC-Downloads` for Windows).
+
+    getj 100 --pretty > resource-100.json
+    getj 100 --pretty > /path/to/my/directory/resource-100.json
+    
 ### `download`
 Returns an XML representation of a resource or a list of resources
 (as seperate xml strings) that a logged in user has access to.
@@ -81,11 +112,13 @@ Returns an XML representation of a resource or a list of resources
 no destination is specified, the archive will be saved in the default
 directory.
 
-e.g `download 100 110` # download the datasets of the resources with ids
-100 and 110.
-
-e.g `download 100 110 --dest /home/my_dir` # download the datasets of the resources with ids
-100 and 110 into the specified destination.
+**Examples**
+    
+    # download the datasets of the resources with ids 100 and 110
+    download 100 110
+    
+    # download the datasets of the resources with ids  100 and 110 into the specified destination
+    download 100 110 --dest /path/to/my_dir
 
 ## Resource Creation/Update
 #### Available Commands
@@ -103,13 +136,52 @@ creation, pass the full path to the directory containing the metadata xml files,
 **Arguments**
 
 The full path to the metadata xml file or the containing directory (for
-batch creation)
+batch creation).
 
 **Options**
 
 `-z` or `--data`: The full path to the .zip archive to be uploaded along
 with the new resource (not used for batch creation).
 
+**Examples**
+
+    # create resource metadata
+    create /path/to/resource.xml
+    
+    # create resource metadata with dataset
+    create /path/to/resource.xml --data /path/to/dataset.zip
+    
+    # create resources from directory
+    create /path/to/resources/directory
+
 ### `update`
+Updates a resource description from an xml file.
+
+**Arguments**
+
+An ELRC-SHARE resource id.
+
+**Options**
+
+`-f` or `--file`: The full path to the metadata xml file.
+
+**Examples**
+    
+    # Update the resource with id 100 with the specified xml file
+    update 100 --file /path/to/updated/xml_file.xml
 
 ### `upload`
+Uploads a single dataset .zip archive for a given resource id.
+
+**Arguments**
+
+An ELRC-SHARE resource id.
+
+**Options**
+
+`-f` or `--file`: The full path to the metadata xml file.
+
+**Examples**
+    
+    # Update the resource with id 100 with the specified xml file
+    update 100 --file /path/to/updated/xml_file.xml
