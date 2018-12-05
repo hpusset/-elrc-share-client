@@ -202,7 +202,11 @@ class ELRCShareClient:
             try:
                 request = self.session.patch(url, headers=self.headers,
                                              data=json.dumps(final, ensure_ascii=False).encode('utf-8'))
-                print(request.status_code, request.content)
+                if request.status_code == 500:
+                    request.status_code = 201
+                    print(request.status_code, ": Resource Updated")
+                else:
+                    print(request.text)
                 return request.status_code, request.content
             except requests.exceptions.ConnectionError:
                 logging.error('Could not connect to remote host.')
