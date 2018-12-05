@@ -14,9 +14,9 @@ Overview
     
 3. Activate the new virtual environment
     
-    `source elrc_env/Scripts/activate` for Linux
+    `source elrc_env/bin/activate` for Linux
     
-    `elrc_env/bin/activate` for Windows
+    `elrc_env/Scripts/activate` for Windows
     
 4. install the *elrc-share-client* package with pip
 
@@ -104,7 +104,7 @@ for Linux and `C:\Users\<UserName>\Downloads\ELRC-Downloads` for Windows).
     getj 100 --pretty > /path/to/my/directory/resource-100.json
     
 ### `download`
-Returns the zipped dataset of a resource or a list of resources that a logged in user has access to.
+Retrives the zipped dataset of a resource or a list of resources that a logged in user has access to. The .zip archive is saved as *archive-\<resource-id>.zip* into the specified directory or the default directory if no destination is specified.
 
 **Options**
 
