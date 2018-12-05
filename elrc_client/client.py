@@ -200,13 +200,17 @@ class ELRCShareClient:
             final['resourceInfo']['id'] = id
 
             try:
-                request = self.session.patch(url, headers=self.headers,
+                request = self.session.post(API_ENDPOINT, headers=self.headers,
                                              data=json.dumps(final, ensure_ascii=False).encode('utf-8'))
-                if request.status_code == 500:
+                if request.status_code == 500 and "duplicate key value" in request.text:
                     request.status_code = 201
                     print(request.status_code, ": Resource Updated")
+                elif request.status_code == 500:
+                    print(request.status_code, request.content)
                 else:
-                    print(request.text)
+                    errors = json.loads(request.text)
+                    for v in errors.values():
+                        print("Could not update resource:", ", ".join(v))
                 return request.status_code, request.content
             except requests.exceptions.ConnectionError:
                 logging.error('Could not connect to remote host.')
@@ -312,11 +316,12 @@ class ELRCShareClient:
             #     files=files,
             #     data=data
             # )
-
-            with open(data_file, 'rb') as f:
-                response = self.session.post(url, files={'resource': f}, data=data)
-                # self.session.post(url, dat)
-                print(response.text)
+            response = self.session.post(url, files={'resource': open(data_file, 'rb')}, data=data)
+            # with open(data_file, 'rb') as f:
+            #     response = self.session.post(url, files={'resource': f}, data=data)
+            #     # self.session.post(url, dat)
+            #     print(response.text)
+            print(response.text)
 
     def download_data(self, resource_id, destination='', progress=True):
         if self.logged_in:
