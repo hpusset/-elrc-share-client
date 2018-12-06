@@ -8,9 +8,13 @@ Overview
 1. Install Python 3.6
 2. `cd` to a preferred directory and create a virtual environment based on Python 3.6
 
-    `cd /path/to/my/directory`
+    `cd /path/to/my/directory`  
     
-    `virtualenv --python=/path/to/python3.6/python3 elrc_env`
+    `python -m venv elrc_env` 
+    
+    or
+    
+    `virtualenv --python=/path/to/python3.6/python3 elrc_env` if you have a previous Python 2.7 installation
     
 3. Activate the new virtual environment
     
