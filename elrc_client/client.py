@@ -317,11 +317,14 @@ class ELRCShareClient:
             #     data=data
             # )
             response = self.session.post(url, files={'resource': open(data_file, 'rb')}, data=data)
+            if response.status_code is not 200:
+                logging.error("Could not upload dataset for the given resource id ({})".format(resource_id))
             # with open(data_file, 'rb') as f:
             #     response = self.session.post(url, files={'resource': f}, data=data)
             #     # self.session.post(url, dat)
             #     print(response.text)
-            print(response.text)
+            else:
+                print(response.text)
 
     def download_data(self, resource_id, destination='', progress=True):
         if self.logged_in:
