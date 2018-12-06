@@ -122,7 +122,7 @@ class ELRCShareClient:
         try:
             request = self.session.get(url)
             request.encoding = 'utf-8'
-            if request.status_code == 401:
+            if request.status_code == 401 or request.status_code == 403:
                 return '401 Unauthorized Request'
             elif request.status_code == 400:
                 return '400 Bad Request'
