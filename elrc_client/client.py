@@ -200,13 +200,15 @@ class ELRCShareClient:
             final['resourceInfo']['id'] = id
 
             try:
-                request1 = self.session.patch(url, headers=self.headers,
-                                              data=json.dumps(final, ensure_ascii=False).encode('utf-8'))
                 request = self.session.post(API_ENDPOINT, headers=self.headers,
                                             data=json.dumps(final, ensure_ascii=False).encode('utf-8'))
+                request = self.session.patch(url, headers=self.headers,
+                                              data=json.dumps(final, ensure_ascii=False).encode('utf-8'))
                 if request.status_code == 500 and "duplicate key value" in request.text:
                     request.status_code = 201
-                    print(request.status_code, ": Resource Updated")
+                    print("Resource Updated")
+                elif request.status_code == 202:
+                    print("Resource Updated")
                 elif request.status_code == 500:
                     print(request.status_code, request.content)
                 else:
@@ -215,6 +217,7 @@ class ELRCShareClient:
                         for v in errors.values():
                             print("Could not update resource:", ", ".join(v))
                     except:
+                        print(request.status_code)
                         logging.error("Could not update resource with id {}".format(id))
                 return request.status_code, request.content
             except requests.exceptions.ConnectionError:
