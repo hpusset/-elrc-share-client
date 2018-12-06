@@ -100,8 +100,8 @@ Results returned by the `getj` and `getx` commands can be saved to a file using 
 If no path is specified, the result will be saved in the default directory (`/home/<user>/ELRC-Downloads` 
 for Linux and `C:\Users\<UserName>\Downloads\ELRC-Downloads` for Windows).
 
-    getj 100 --pretty > resource-100.json
-    getj 100 --pretty > /path/to/my/directory/resource-100.json
+    getx 100 > resource-100.json
+    getx 100 > /path/to/my/directory/resource-100.xml
     
 ### `download`
 Retrives the zipped dataset of a resource or a list of resources that a logged in user has access to. The .zip archive is saved as *archive-\<resource-id>.zip* into the specified directory or the default directory if no destination is specified.
