@@ -128,19 +128,19 @@ directory.
 
 ### `create`
 Creates a new resource from an xml file, with optional dataset
-(.zip archive) to upload. If no dataset is provided, the command will
-try to upload any .zip archive that has the same name with the xml file,
-within the same directory (e.g. resource1.xml, resource1.zip). For batch
-creation, pass the full path to the directory containing the metadata xml files, along with any dataset.
+(.zip archive) to upload. For batch
+creation, pass the **absolute path** to the directory containing the metadata xml files, along with any datasets. In 
+this case the command will try to upload any .zip archive that has the same name with the xml file,
+within the same directory (e.g. resource1.xml, resource1.zip)
 
 **Arguments**
 
-The full path to the metadata xml file or the containing directory (for
+The **absolute path** to the metadata xml file or the containing directory (for
 batch creation).
 
 **Options**
 
-`-z` or `--data`: The full path to the .zip archive to be uploaded along
+`-z` or `--data`: The **absolute** path to the .zip archive to be uploaded along
 with the new resource (not used for batch creation).
 
 **Examples**
@@ -163,7 +163,7 @@ An ELRC-SHARE resource id.
 
 **Options**
 
-`-f` or `--file`: The full path to the metadata xml file.
+`-f` or `--file`: The **absolute path** to the metadata xml file.
 
 **Examples**
     
@@ -179,7 +179,7 @@ An ELRC-SHARE resource id.
 
 **Options**
 
-`-d` or `--data`: The full path to the .zip archive to be uploaded.
+`-d` or `--data`: The **absolute path** to the .zip archive to be uploaded.
 
 **Examples**
     
