@@ -35,6 +35,12 @@ Users that intend to use the elrc-share-client must have an active account on EL
 - `getj`
 - `getx`
 - `download`
+### Resource Access Authorization
+- *Administrators*: all resources
+- *ELRC Reviewers*: all resources
+- *EC members*: all published, ingested and own resources
+- *Simple editors*: own resources
+- *Contributors*: no resources
 
 ### `getj`
 Returns a json representation of a resource or a list of resources
@@ -57,15 +63,7 @@ A list of space seperated resource ids
 
  `--my`: Returns only the resources that the user owns (useful
  for admins, ec members and erlc reviewers).
-
-**User group permissions**
-
-- *Administrators*: all resources
-- *ELRC Reviewers*: all resources
-- *EC members*: all published, ingested and own resources
-- *Simple editors*: own resources
-- *Contributors*: no resources
-
+ 
 **Examples**
 
     # Get a json representation of the resource with id 100
@@ -87,14 +85,6 @@ Returns an XML representation of a resource or a list of resources
 **Arguments**
 
 A list of space seperated resource ids
-
-**User group permissions**
-
-- *Administrators*: all resources
-- *ELRC Reviewers*: all resources
-- *EC members*: all published, ingested and own resources
-- *Simple editors*: own resources
-- *Contributors*: no resources
 
 Results returned by the `getj` and `getx` commands can be saved to a file using output redirection `>`. 
 If no path is specified, the result will be saved in the default directory (`/home/<user>/ELRC-Downloads` 
@@ -140,7 +130,7 @@ batch creation).
 
 **Options**
 
-`-z` or `--data`: The **absolute** path to the .zip archive to be uploaded along
+`-z` or `--data`: The **absolute path** to the .zip archive to be uploaded along
 with the new resource (not used for batch creation).
 
 **Examples**
