@@ -200,7 +200,7 @@ An ELRC-SHARE resource id.
 
 **Options**
 
-`-d` or `--data`: The **absolute path** to the .zip archive to be uploaded.
+`-z` or `--data`: The **absolute path** to the .zip archive to be uploaded.
 
 **Examples**
     
