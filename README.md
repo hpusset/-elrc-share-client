@@ -9,24 +9,25 @@ Overview
 2. `cd` to a preferred directory and create a virtual environment based on Python 3.6
 
     `cd /path/to/my/directory`  
-    
+3.  Create a virtual environment
+
     `python -m venv elrc_env` 
     
     or
     
     `virtualenv --python=/path/to/python3.6/python3 elrc_env` if you have a previous Python 2.7 installation
     
-3. Activate the new virtual environment
+4. Activate the new virtual environment
     
     `source elrc_env/bin/activate` for Linux
     
     `elrc_env/Scripts/activate` for Windows
     
-4. install the *elrc-share-client* package with pip
+5. install the *elrc-share-client* package with pip
 
     `pip install git+https://github.com/MiltosD/ELRC-Client.git@dev`
     
-5. Start the ELRC-SHARE shell
+6. Start the ELRC-SHARE shell
 
     `elrc-shell`
 ## User Authentication
@@ -36,15 +37,37 @@ Users that intend to use the elrc-share-client must have an active account on EL
 - `logout`
 ## Resource Retrieval
 #### Available Commands
+- `list`
 - `getj`
 - `getx`
 - `download`
+
 ### Resource Access Authorization
 - *Administrators*: all resources
 - *ELRC Reviewers*: all resources
 - *EC members*: all published, ingested and own resources
 - *Simple editors*: own resources
 - *Contributors*: no resources
+
+### `list`
+Returns a list of all resources accessible by the user. The returned information for each resource consists of 
+the following tab delimited values:
+
+1. The resource id
+2. The resource name
+3. The resource's publication status
+
+**Options**
+
+ `--my`: Returns all resources that the user owns (has no effect for simple editors).
+ 
+**Examples**
+
+    # List all accessible resources
+    list
+    
+    # List own resources
+    list --my
 
 ### `getj`
 Returns a json representation of a resource or a list of resources
