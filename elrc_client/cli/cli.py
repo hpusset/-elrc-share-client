@@ -158,6 +158,24 @@ class ELRCShell(Cmd):
         """
         self.client.logout()
 
+    def do_list(self, args):
+        """
+        Returns a list of all resources accessible by the user. The returned information consists of:
+        a. The resource id
+        b. The resource name
+        c. The resource's publication status
+        :options: --my: Returns all resources that the user owns. For simple editors this option has no effect
+        """
+        try:
+            (options, arg_list) = self.parser.parse_args(args.split())
+        except (optparse.BadOptionError, optparse.OptionValueError):
+            return
+        if arg_list:
+            for r in arg_list:
+                pass
+        else:
+            print(self.client.list(my=options.my))
+
     def do_getj(self, args):
         """
         Get a json representation of a resource or a list of resources (as seperate json strings). If no resources are

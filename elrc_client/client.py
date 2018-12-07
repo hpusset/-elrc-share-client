@@ -100,6 +100,30 @@ class ELRCShareClient:
         else:
             pass
 
+    def list(self, my=False):
+        """
+        Returns a list of all resources accessible or owned by the user. The returned information consists of:
+        a. The resource id
+        b. The resource name
+        c. The resource's publication status
+        """
+        if not self.logged_in:
+            logging.error("Please login to ELRC-SHARE using your credentials")
+            return
+
+        url = "{}list/my".format(API_OPERATIONS) if my else "{}list/".format(API_OPERATIONS)
+        try:
+            request = self.session.get(url)
+            request.encoding = 'utf-8'
+            if request.status_code == 401 or request.status_code == 403:
+                return '401 Unauthorized Request'
+            elif request.status_code == 400:
+                return '400 Bad Request'
+            else:
+                return request.text
+        except requests.exceptions.ConnectionError:
+            logging.error('Could not connect to remote host.')
+
     def get_resource(self, rid=None, as_json=False, as_xml=False, pretty=False):
         """
         Given an ELRC-SHARE Language Resource id, return the resource's metadata
