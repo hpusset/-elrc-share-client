@@ -111,9 +111,9 @@ Returns an XML representation of a resource or a list of resources
 
 **Arguments**
 
-A list of space seperated resource ids
+A list of space separated resource ids
 
-Results returned by the `getj` and `getx` commands can be saved to a file using output redirection `>`. 
+Results returned by the `list`, `getj` and `getx` commands can be saved to a file using output redirection `>`. 
 If no path is specified, the result will be saved in the default directory (`/home/<user>/ELRC-Downloads` 
 for Linux and `C:\Users\<UserName>\Downloads\ELRC-Downloads` for Windows).
 
