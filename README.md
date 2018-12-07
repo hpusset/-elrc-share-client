@@ -112,6 +112,10 @@ Returns an XML representation of a resource or a list of resources
 **Arguments**
 
 A list of space separated resource ids
+    
+**Options**
+
+ `-p` or `--pretty`: Pretty prints the xml output.
 
 Results returned by the `list`, `getj` and `getx` commands can be saved to a file using output redirection `>`. 
 If no path is specified, the result will be saved in the default directory (`/home/<user>/ELRC-Downloads` 

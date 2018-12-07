@@ -37,6 +37,8 @@ import sys
 import zipfile
 
 import os
+from xml.dom import minidom
+
 import requests
 from elrc_client.settings import LOGIN_URL, API_ENDPOINT, LOGOUT_URL, API_OPERATIONS, DOWNLOAD_DIR
 from elrc_client.settings import logging
@@ -155,6 +157,10 @@ class ELRCShareClient:
             if as_json:
                 return json.dumps(json.loads(request.content), ensure_ascii=False, indent=indent)
             elif as_xml:
+                if pretty:
+                    xml = minidom.parseString(request.text)
+                    return xml.toprettyxml().\
+                        replace("<?xml version=\"1.0\" ?>", "<?xml version=\"1.0\" encoding=\"utf-8\"?>")
                 return request.text
             else:
                 return json.loads(request.content)
