@@ -246,7 +246,7 @@ class ELRCShell(Cmd):
         resource1.xml, resource1.zip).
         :param args: An ELRC-SHARE resource id or a space seperated list of resource ids
         options: --zip/-z: A .zip archive to upload
-        :return: Name of new resource
+        :return: Name and id of new resource
         """
         try:
             (options, arg_list) = self.parser.parse_args(args.split())
