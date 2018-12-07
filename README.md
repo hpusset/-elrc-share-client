@@ -143,11 +143,11 @@ directory.
 
 ## Resource Creation/Update
 #### Available Commands
-- `create`
+- `import`
 - `update`
 - `upload`
 
-### `create`
+### `import`
 Creates a new resource from an xml file, with optional dataset
 (.zip archive) to upload. For batch
 creation, pass the **absolute path** to the directory containing the metadata xml files, along with any datasets. In 
@@ -166,14 +166,14 @@ with the new resource (not used for batch creation).
 
 **Examples**
 
-    # create resource metadata
-    create /path/to/resource.xml
+    # import resource metadata
+    import /path/to/resource.xml
     
     # create resource metadata with dataset
-    create /path/to/resource.xml --data /path/to/dataset.zip
+    import /path/to/resource.xml --data /path/to/dataset.zip
     
     # create resources from directory
-    create /path/to/resources/directory
+    import /path/to/resources/directory
 
 ### `update`
 Updates a resource description from an xml file.

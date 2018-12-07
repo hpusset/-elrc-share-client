@@ -239,7 +239,7 @@ class ELRCShell(Cmd):
             print(self.client.get_resource(r, as_xml=True, pretty=options.pretty))
             print('')
 
-    def do_create(self, args):
+    def do_import(self, args):
         """
         Create a new resource from an xml file, with optional dataset (.zip archive) to upload. If no dataset is
         provided, the command will try to upload any .zip archive that has the same name with the xml file (e.g.
