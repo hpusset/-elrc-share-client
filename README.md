@@ -103,6 +103,10 @@ A list of space seperated resource ids
  `--my`: Returns only the resources that the user owns (useful
  for admins, ec members and erlc reviewers).
  
+ `-s` or `--save`: Saves the output to a file in the default directory
+ 
+ `--distinct`: Returns each resource as a separate .json string
+ 
 **Examples**
 
     # Get a json representation of the resource with id 100
@@ -114,8 +118,11 @@ A list of space seperated resource ids
     # Get json representations of the resources with ids 10, 11, and 23
     getj 10 11 23
     
-    Get a json representation of all the resources that the currently logged in user has access to
+    # Get a json representation of all the resources that the currently logged in user has access to
     getj
+    
+    # Get a json represenatation of all accessible resources and save as separate .json files in the default download directory
+    getj --save --pretty --distinct
 
 #### `getx`
 Returns an XML representation of a resource or a list of resources
@@ -127,14 +134,38 @@ A list of space separated resource ids
     
 **Options**
 
- `-p` or `--pretty`: Pretty prints the xml output.
+ `-p` or `--pretty`: Pretty prints the xml output
+ 
+ `-s` or `--save`: Saves the output to a file in the default directory
+ 
+ `--my`: Returns only the resources that the user owns (useful
+ for admins, ec members and erlc reviewers).
 
-Results returned by the `list`, `getj` and `getx` commands can be saved to a file using output redirection `>`. 
+Results returned by the `list`, `getj` and `getx` commands can **also** be saved to a file using output redirection `>`. 
 If no path is specified, the result will be saved in the default directory (`/home/<user>/ELRC-Downloads` 
 for Linux and `C:\Users\<UserName>\Downloads\ELRC-Downloads` for Windows).
 
-    getx 100 > resource-100.json
+    # default download directory
+    getx 100 > resource-100.xml 
+    
+    # user defined directory
     getx 100 > /path/to/my/directory/resource-100.xml
+
+**Examples**
+
+    # Get an xml representation of the resource with id 100
+    getx 100
+    
+    # Get a formatted xml representation of the resource with id 100
+    getx 100 --pretty
+
+    # Get an xml representation of all the resources that the currently logged in user has access to
+    # Since this command will return multiple xml strings, the > redirection to file won't work. Use --save instead
+    getx
+    
+    # Get an xml represenatation of all accessible resources and save as separate .xml files in the default download directory
+    getx --save --pretty --distinct
+
     
 #### `download`
 Retrives the zipped dataset of a resource or a list of resources that a logged in user has access to. The .zip archive is saved as *archive-\<resource-id>.zip* into the specified directory or the default directory if no destination is specified.
@@ -255,6 +286,18 @@ client.get_resource(338, as_json=True, pretty=True, save=True)
 
 # Download the dataset associated with resource 338 (saved in DOWNLOAD_DIR as archive-338.zip)
 client.download_data(338, progress=False)
+
+# Get metadata in separate xml files (in DOWNLOAD_DIR) for all my resources
+client.get_resources(as_xml=True, pretty=True, save=True, my=True)
+
+# Get metadata in separate json files for all accessible resources
+client.get_resources(as_json=True, distinct=True, pretty=True, save=True)
+
+# Get metadata in a compact json file for all accessible resources
+client.get_resources(as_json=True, pretty=True, save=True)
+
+# Get a python dictionary for all accessible resources
+client.get_resources()
 
 
 # CREATING RESOURCES
