@@ -41,7 +41,7 @@ def readme():
 
 setup(name='elrc-share-client',
       version='1.0.0',
-      description='Client with CLI for CREATE, READ and UPDATE download operations on ELRC-SHARE repository',
+      description='Client with CLI for CREATE, READ, UPDATE and download operations on ELRC-SHARE repository',
       long_description=readme(),
       classifiers=[
           'License :: OSI Approved :: MIT License',
