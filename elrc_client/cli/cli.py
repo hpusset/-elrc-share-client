@@ -61,6 +61,8 @@ class ELRCShell(Cmd):
     parser.add_option('-z', '--data', dest='data_file', default=None)
     parser.add_option('-p', '--pretty', dest='pretty', default=False, action='store_true')
     parser.add_option('-m', '--my', dest='my', default=False, action='store_true')
+    parser.add_option('-s', '--save', dest='save', default=False, action='store_true')
+    parser.add_option('--distinct', dest='distinct', default=False, action='store_true')
 
     def _redirect_output(self, statement: Statement) -> None:
         """Handles output redirection for >, >>, and |.
@@ -206,10 +208,12 @@ class ELRCShell(Cmd):
             return
         if arg_list:
             for r in arg_list:
-                print(self.client.get_resource(r, as_json=True, pretty=options.pretty))
+                print(self.client.get_resource(r, as_json=True, pretty=options.pretty, save=options.save))
                 print('')
         else:
-            print(self.client.get_resources(as_json=True, pretty=options.pretty, my=options.my))
+            print(self.client.get_resources(
+                as_json=True, pretty=options.pretty,
+                my=options.my, save=options.save, distinct=options.distinct))
             print('')
 
     def do_getx(self, args):
@@ -235,8 +239,12 @@ class ELRCShell(Cmd):
         except (optparse.BadOptionError, optparse.OptionValueError):
             return
 
-        for r in arg_list:
-            print(self.client.get_resource(r, as_xml=True, pretty=options.pretty))
+        if arg_list:
+            for r in arg_list:
+                print(self.client.get_resource(r, as_xml=True, pretty=options.pretty, save=options.save))
+                print('')
+        else:
+            print(self.client.get_resources(as_xml=True, pretty=options.pretty, my=options.my, save=options.save))
             print('')
 
     def do_import(self, args):
@@ -252,8 +260,12 @@ class ELRCShell(Cmd):
             (options, arg_list) = self.parser.parse_args(args.split())
         except (optparse.BadOptionError, optparse.OptionValueError):
             return
+
+        if not arg_list:
+            logging.error('Missing xml description file')
+            return
         for r in arg_list:
-            self.client.create_resources(r, dataset=options.data_file)
+            self.client.create(r, dataset=options.data_file)
 
     def do_update(self, args):
         """
@@ -267,8 +279,14 @@ class ELRCShell(Cmd):
             (options, arg_list) = self.parser.parse_args(args.split())
         except (optparse.BadOptionError, optparse.OptionValueError):
             return
+        if not arg_list:
+            logging.error('Missing resource id')
+            return
         for r in arg_list:
-            self.client.update_resource(r, options.xml_file)
+            if not options.xml_file:
+                logging.error('Missing --file option')
+                return
+            self.client.update_metadata(r, options.xml_file)
 
     def do_download(self, args):
         """
@@ -282,12 +300,11 @@ class ELRCShell(Cmd):
             (options, arg_list) = self.parser.parse_args(args.split())
         except (optparse.BadOptionError, optparse.OptionValueError):
             return
-
-        if arg_list:
-            for arg in arg_list:
-                self.client.download_data(arg, destination=options.destination or '')
-        else:
-            self.client.get_resources()
+        if not arg_list:
+            logging.error('Missing resource id')
+            return
+        for arg in arg_list:
+            self.client.download_data(arg, destination=options.destination or '')
         return
 
     def do_upload(self, args):
@@ -301,7 +318,12 @@ class ELRCShell(Cmd):
             (options, arg_list) = self.parser.parse_args(args.split())
         except (optparse.BadOptionError, optparse.OptionValueError):
             return
-
+        if not arg_list:
+            logging.error('Missing resource id')
+            return
         for arg in arg_list:
+            if not options.data_file:
+                logging.error('Missing --data option')
+                return
             self.client.upload_data(arg, data_file=options.data_file or '')
         return
