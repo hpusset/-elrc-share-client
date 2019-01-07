@@ -5,9 +5,12 @@ Overview
 
 1. [Installation](#installation)
 2. [Using the interactive command line tool](#cli)
+    2.1 [User Authentication](#auth)
+    2.2. [Resource Retrieval](#retrieve)
+    2.3. [Resource Creation/Update](#create)
 3. [Using the API](#pythonapi)
 
-## Installation <a name="installation">
+## 1. Installation <a name="installation">
 1. Install Python 3.6
 2. `cd` to a preferred directory and create a virtual environment based on Python 3.6
 
@@ -34,13 +37,13 @@ Overview
 
     `elrc-shell`
 
-## Using the interactive command line tool <a name="cli">
-### User Authentication
+## 2. Using the interactive command line tool <a name="cli">
+### 2.1. User Authentication <a name="auth">
 Users that intend to use the elrc-share-client must have an active account on ELRC-SHARE repository.
 #### Available Commands
 - `login <username> <password>`
 - `logout`
-### Resource Retrieval
+### 2.2. Resource Retrieval <a name="retrieve">
 #### Available Commands
 - `list`
 - `getj`
@@ -146,7 +149,7 @@ directory.
     # download the datasets of the resources with ids  100 and 110 into the specified destination
     download 100 110 --dest /path/to/my_dir
 
-### Resource Creation/Update
+### 2.3. Resource Creation/Update <a name="create">
 ##### Available Commands
 - `import`
 - `update`
@@ -212,7 +215,7 @@ An ELRC-SHARE resource id.
     # Upload the specified .zip archive to resource with id 100 (replaces existing dataset)
     upload 100 --data /path/to/zipped/archive.zip
 
-## Using the API <a name="pythonapi">
+## 3. Using the API <a name="pythonapi">
 
 ```python
 # create an ELRCShareClient object
@@ -248,6 +251,7 @@ client.get_resource(338, as_json=True, pretty=True, save=True)
 
 # Download the dataset associated with resource 338 (saved in DOWNLOAD_DIR as archive-338.zip)
 client.download_data(338, progress=False)
+
 
 # CREATING RESOURCES
 # ------------------
