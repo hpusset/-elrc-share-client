@@ -206,3 +206,45 @@ An ELRC-SHARE resource id.
     
     # Upload the specified .zip archive to resource with id 100 (replaces existing dataset)
     upload 100 --data /path/to/zipped/archive.zip
+
+## Using the API
+
+```python
+# create an ELRCShareClient object
+from elrc_client.client import ELRCShareClient
+client = ELRCShareClient()
+
+# Login to ELRC-SHARE repository using a valid username and password
+client.login('username', 'password')
+
+
+# LISTING RESOURCES
+
+# get a list of my resources
+client.list(my=True, raw=False)
+
+# get a list of all accessible resources
+client.list(raw=False)
+
+# get a list of all accessible resources and save to .tsv file
+with open('list.tsv', 'w', encoding='utf-8') as f:
+    f.write(client.list())
+    
+    
+# RETRIEVING RESOURCES
+
+# Get the metadata of resource 338 as formatted xml and save to file (in DOWNLOAD_DIR, as 'resource-338.xml')
+client.get_resource(338, as_xml=True, pretty=True, save=True)
+
+# Get the metadata of resource 338 as formatted json and save to file (in DOWNLOAD_DIR, as 'resource-338.json')
+client.get_resource(338, as_json=True, pretty=True, save=True)
+
+# Create a new resource with associated dataset
+client.create('path/to/resource.xml', dataset='path/to/dataset.zip')
+
+# Batch create resources from specified directory
+# The directory should contain valid xml descriptions and, optionally, .zip files with the same name as the
+# associated xml files.
+client.create('path/to/xml/descriptions/directory')
+
+```
