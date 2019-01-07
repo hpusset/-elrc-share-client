@@ -30,26 +30,28 @@ Overview
 6. Start the ELRC-SHARE shell
 
     `elrc-shell`
-## User Authentication
+
+## Using the interactive command line tool
+### User Authentication
 Users that intend to use the elrc-share-client must have an active account on ELRC-SHARE repository.
 #### Available Commands
 - `login <username> <password>`
 - `logout`
-## Resource Retrieval
+### Resource Retrieval
 #### Available Commands
 - `list`
 - `getj`
 - `getx`
 - `download`
 
-### Resource Access Authorization
+##### Resource Access Authorization
 - *Administrators*: all resources
 - *ELRC Reviewers*: all resources
 - *EC members*: all published, ingested and own resources
 - *Simple editors*: own resources
 - *Contributors*: no resources
 
-### `list`
+#### `list`
 Returns a list of all resources accessible by the user. The returned information for each resource consists of 
 the following tab delimited values:
 
@@ -69,7 +71,7 @@ the following tab delimited values:
     # List own resources
     list --my
 
-### `getj`
+#### `getj`
 Returns a json representation of a resource or a list of resources
 (as seperate json strings). If no resources are
 specified, the command will return all the resources that a logged in
@@ -105,7 +107,7 @@ A list of space seperated resource ids
     Get a json representation of all the resources that the currently logged in user has access to
     getj
 
-### `getx`
+#### `getx`
 Returns an XML representation of a resource or a list of resources
 (as seperate xml strings) that a logged in user has access to.
 
@@ -124,7 +126,7 @@ for Linux and `C:\Users\<UserName>\Downloads\ELRC-Downloads` for Windows).
     getx 100 > resource-100.json
     getx 100 > /path/to/my/directory/resource-100.xml
     
-### `download`
+#### `download`
 Retrives the zipped dataset of a resource or a list of resources that a logged in user has access to. The .zip archive is saved as *archive-\<resource-id>.zip* into the specified directory or the default directory if no destination is specified.
 
 **Options**
@@ -141,13 +143,13 @@ directory.
     # download the datasets of the resources with ids  100 and 110 into the specified destination
     download 100 110 --dest /path/to/my_dir
 
-## Resource Creation/Update
-#### Available Commands
+### Resource Creation/Update
+##### Available Commands
 - `import`
 - `update`
 - `upload`
 
-### `import`
+#### `import`
 Creates a new resource from an xml file, with optional dataset
 (.zip archive) to upload. For batch
 creation, pass the **absolute path** to the directory containing the metadata xml files, along with any datasets. In 
@@ -175,7 +177,7 @@ with the new resource (not used for batch creation).
     # create resources from directory
     import /path/to/resources/directory
 
-### `update`
+#### `update`
 Updates a resource description from an xml file.
 
 **Arguments**
@@ -191,7 +193,7 @@ An ELRC-SHARE resource id.
     # Update the resource with id 100 with the specified xml file
     update 100 --file /path/to/updated/xml_file.xml
 
-### `upload`
+#### `upload`
 Uploads a single dataset .zip archive for a given resource id.
 
 **Arguments**
