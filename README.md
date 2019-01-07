@@ -33,6 +33,10 @@ Overview
 
     `pip install git+https://github.com/MiltosD/ELRC-Client.git@dev`
     
+    `DOWNLOAD_DIR`: 
+    The installation process creates a default download directory default directory 
+        (`/home/<user>/ELRC-Downloads` for Linux and `C:\Users\<UserName>\Downloads\ELRC-Downloads` for Windows)
+    
 6. Start the ELRC-SHARE shell
 
     `elrc-shell`
