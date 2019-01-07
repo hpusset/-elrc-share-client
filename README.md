@@ -5,9 +5,9 @@ Overview
 
 1. [Installation](#installation)
 2. [Using the interactive command line tool](#cli)
-    2.1 [User Authentication](#auth)
-    2.2. [Resource Retrieval](#retrieve)
-    2.3. [Resource Creation/Update](#create)
+    1. [User Authentication](#auth)
+    2. [Resource Retrieval](#retrieve)
+    3. [Resource Creation/Update](#create)
 3. [Using the API](#pythonapi)
 
 ## 1. Installation <a name="installation">
