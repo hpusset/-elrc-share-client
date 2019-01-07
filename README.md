@@ -1,10 +1,13 @@
 Overview
 --------
 
-**elrc-share-client** is an interactive command-line tool for retrieving, creating and updating ELRC-SHARE resources.
+**elrc-share-client** is Python API with an interactive command-line tool for retrieving, creating and updating ELRC-SHARE resources.
 
+1. [Installation](#installation)
+2. [Using the interactive command line tool](#cli)
+3. [Using the API](#pythonapi)
 
-## Installation
+## Installation <a name="installation">
 1. Install Python 3.6
 2. `cd` to a preferred directory and create a virtual environment based on Python 3.6
 
@@ -31,7 +34,7 @@ Overview
 
     `elrc-shell`
 
-## Using the interactive command line tool
+## Using the interactive command line tool <a name="cli">
 ### User Authentication
 Users that intend to use the elrc-share-client must have an active account on ELRC-SHARE repository.
 #### Available Commands
@@ -209,7 +212,7 @@ An ELRC-SHARE resource id.
     # Upload the specified .zip archive to resource with id 100 (replaces existing dataset)
     upload 100 --data /path/to/zipped/archive.zip
 
-## Using the API
+## Using the API <a name="pythonapi">
 
 ```python
 # create an ELRCShareClient object
@@ -221,6 +224,7 @@ client.login('username', 'password')
 
 
 # LISTING RESOURCES
+# -----------------
 
 # get a list of my resources
 client.list(my=True, raw=False)
@@ -231,15 +235,22 @@ client.list(raw=False)
 # get a list of all accessible resources and save to .tsv file
 with open('list.tsv', 'w', encoding='utf-8') as f:
     f.write(client.list())
-    
+        
     
 # RETRIEVING RESOURCES
+# --------------------
 
 # Get the metadata of resource 338 as formatted xml and save to file (in DOWNLOAD_DIR, as 'resource-338.xml')
 client.get_resource(338, as_xml=True, pretty=True, save=True)
 
 # Get the metadata of resource 338 as formatted json and save to file (in DOWNLOAD_DIR, as 'resource-338.json')
 client.get_resource(338, as_json=True, pretty=True, save=True)
+
+# Download the dataset associated with resource 338 (saved in DOWNLOAD_DIR as archive-338.zip)
+client.download_data(338, progress=False)
+
+# CREATING RESOURCES
+# ------------------
 
 # Create a new resource with associated dataset
 client.create('path/to/resource.xml', dataset='path/to/dataset.zip')
@@ -248,5 +259,9 @@ client.create('path/to/resource.xml', dataset='path/to/dataset.zip')
 # The directory should contain valid xml descriptions and, optionally, .zip files with the same name as the
 # associated xml files.
 client.create('path/to/xml/descriptions/directory')
+
+
+# UPDATING EXISTING RESOURCES
+# ---------------------------
 
 ```
