@@ -8,7 +8,7 @@ Overview
     1. [User Authentication](#auth)
     2. [Resource Retrieval](#retrieve)
     3. [Resource Creation/Update](#create)
-3. [Using the API](#pythonapi)
+3. [Using the **ELRCShareClient** class](#pythonapi)
 
 ## 1. Installation <a name="installation">
 1. Install Python 3.6
@@ -219,7 +219,7 @@ An ELRC-SHARE resource id.
     # Upload the specified .zip archive to resource with id 100 (replaces existing dataset)
     upload 100 --data /path/to/zipped/archive.zip
 
-## 3. Using the API <a name="pythonapi">
+## 3. Using the ELRCShareClient class <a name="pythonapi">
 
 ```python
 # create an ELRCShareClient object
