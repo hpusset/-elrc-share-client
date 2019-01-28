@@ -34,12 +34,13 @@
 import logging
 
 import os
+
 # import local_settings
 
-TEST_MODE = True
+TEST_MODE = False
 
 if TEST_MODE:
-    REPO_URL = 'http://194.177.192.69/'
+    REPO_URL = ''  # dev url
 else:
     REPO_URL = 'https://elrc-share.eu'
 LOGIN_URL = '%s/login/' % REPO_URL
