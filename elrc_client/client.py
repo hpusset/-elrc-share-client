@@ -58,7 +58,8 @@ class ELRCShareClient:
         self.user_log_in = None
         self.logged_in = False
         self.headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'referer': 'https://www.elrc-share.eu/'
         }
 
         atexit.register(self.logout)
