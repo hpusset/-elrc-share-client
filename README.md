@@ -315,4 +315,14 @@ client.create('path/to/xml/descriptions/directory')
 # UPDATING EXISTING RESOURCES
 # ---------------------------
 
+# Update resource 334 metadata using the specified xml file
+client.update_metadata(334, 'path/to/resource-334.xml')
+
+# Upload dataset for resource 334 (replace existing)
+client.upload_data(334, 'path/to/dataset.zip')
+
+#-------------------------
+#logout
+client.logout()
+
 ```
