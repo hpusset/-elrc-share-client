@@ -104,7 +104,7 @@ class ELRCShareClient:
         else:
             pass
 
-    def list(self, my=False):
+    def list(self, my=False, raw=False):
         """
         Returns a list of all resources accessible or owned by the user. The returned information consists of:
         a. The resource id
@@ -124,7 +124,13 @@ class ELRCShareClient:
             elif request.status_code == 400:
                 return '400 Bad Request'
             else:
-                return request.text
+                if raw:
+                    return request.text
+                else:
+                    result = list()
+                    for x in request.text.split('\n'):
+                        result.append(tuple([i for i in x.split('\t')]))
+                    return result[:-2]
         except requests.exceptions.ConnectionError:
             logging.error('Could not connect to remote host.')
 
