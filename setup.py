@@ -64,7 +64,7 @@ setup(name='elrc-share-client',
           'lxml==4.2.5',
           'pyperclip==1.7.0',
           'pyreadline==2.1',
-          'requests==2.19.1',
+          'requests==2.20.0',
           'urllib3==1.23',
           'wcwidth==0.1.7',
           'xmltodict==0.11.0'
