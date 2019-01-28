@@ -30,36 +30,3 @@
 # documentation are those of the authors and should not be
 # interpreted as representing official policies, either expressed
 # or implied, of ILSP/Athena R.C.
-
-import logging
-
-import os
-# import local_settings
-
-TEST_MODE = True
-
-if TEST_MODE:
-    REPO_URL = 'http://194.177.192.69/'
-else:
-    REPO_URL = 'https://elrc-share.eu'
-LOGIN_URL = '%s/login/' % REPO_URL
-LOGOUT_URL = '%s/logout/' % REPO_URL
-API_ENDPOINT = '%s/repository/api/editor/lr/' % REPO_URL
-API_OPERATIONS = '%s/repository/api/operations/' % REPO_URL
-XML_UPLOAD_URL = '%s/repository/api/create/' % REPO_URL
-XML_SCHEMA = 'https://elrc-share.eu/ELRC-SHARE_SCHEMA/v2.0/ELRC-SHARE-Resource.xsd'
-
-# Set default directory for downloads
-if os.name == 'posix':
-    DOWNLOAD_DIR = '/home/{}/ELRC-Downloads'.format(os.getlogin())
-    if not os.path.exists(DOWNLOAD_DIR):
-        os.mkdir(DOWNLOAD_DIR)
-elif os.name == 'nt':
-    DOWNLOAD_DIR = 'C:\\Users\\{}\\Downloads\\ELRC-Downloads'.format(os.getlogin())
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="[%(asctime)s] ELRC-SHARE::%(levelname)-5.5s  %(message)s",
-    handlers=[
-        logging.StreamHandler()
-    ])
