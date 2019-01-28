@@ -78,7 +78,7 @@ class ELRCShareClient:
                 # Login to site
                 try:
                     login = self.session.post(LOGIN_URL, data=login_data,
-                                              headers={'referer': 'https://www.elrc-share.eu/'})
+                                              headers={'referer': 'https://elrc-share.eu/'})
                     if 'Your username and password didn\'t match' in login.text or login.status_code != 200:
                         logging.error('Unsuccessful Login...')
                     else:
