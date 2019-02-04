@@ -340,7 +340,7 @@ class ELRCShareClient:
                     self.upload_data(new_id, data_file=dataset)
                 except Exception as e:
                     pass
-                return request.status_code
+                return new_id
             elif request.status_code == 401:
                 logging.error('401 Unauthorized Request')
                 return request.status_code
