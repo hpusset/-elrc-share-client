@@ -43,7 +43,10 @@ Overview
 
 ## 2. Using the interactive command line tool <a name="cli">
 ### 2.1. User Authentication <a name="auth">
-Users that intend to use the elrc-share-client must have an active account on ELRC-SHARE repository.
+Users that intend to use the elrc-share-client must have an active and elevated account on ELRC-SHARE repository.
+After [registration](https://elrc-share.eu/accounts/create/), contact the ELRC-SHARE repository administrators 
+at [elrc-share@ilsp.gr](mailto:elrc-share@ilsp.gr), stating your affiliation and role in the context of ELRC or 
+of a CEF-funded project. Once this has been approved by the ELRC consortium, you will be notified by email.
 #### Available Commands
 - `login <username> <password>`
 - `logout`
