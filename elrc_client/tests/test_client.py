@@ -3,7 +3,7 @@
 # This software has been developed by the Institute for Language and
 # Speech Processing/Athena Research Centre as part of Service
 # Contract 30-CE-0816330/00-16 for the European Union represented by
-# the European Commission in 2016-2019.
+# the European Commission.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
