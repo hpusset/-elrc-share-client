@@ -31,7 +31,7 @@ Overview
     
 5. install the *elrc-share-client* package with pip
 
-    `pip install git+https://github.com/MiltosD/ELRC-Client.git`
+    `pip install https://gitlab.com/ilsp-nlpli-elrc-share/elrc-share-client.git`
     
     `DOWNLOAD_DIR`: 
     The installation process creates a default download directory (`/home/<user>/ELRC-Downloads` for 
