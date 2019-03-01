@@ -1,3 +1,5 @@
+# ELRC-SHARE-client API source code BSD-3-clause licence
+#
 # Copyright (c) 2019
 #
 # This software has been developed by the Institute for Language and
