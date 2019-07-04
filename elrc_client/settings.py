@@ -38,10 +38,10 @@ import os
 
 # import local_settings
 
-TEST_MODE = False
+TEST_MODE = True
 
 if TEST_MODE:
-    REPO_URL = ''  # dev url
+    REPO_URL = 'http://127.0.0.1:8001'  # dev url
 else:
     REPO_URL = 'https://elrc-share.eu'
 LOGIN_URL = '%s/login/' % REPO_URL

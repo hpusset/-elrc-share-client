@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # ELRC-SHARE-client API source code BSD-3-clause licence
 #
 # Copyright (c) 2019
